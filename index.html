@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MATH LEGENDS: BATTLE ARENA — Game Edukasi Matematika SMP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- PARTIKEL LATAR -->
+  <div id="particles-bg" class="particles-container"></div>
+
+  <!-- TOP BAR GLOBAL (KONTROL CEPAT GURU & AUDIO) -->
+  <header id="global-topbar" class="topbar hidden">
+    <div class="topbar-left">
+      <button id="btn-home-nav" class="btn-icon" title="Kembali ke Beranda" aria-label="Beranda">🏠 Beranda</button>
+      <span class="game-mini-title">⚔️ MATH LEGENDS</span>
+    </div>
+    <div class="topbar-right">
+      <div class="currency-pill coin-pill" title="Koin Emas">🪙 <span id="top-coins">0</span></div>
+      <div class="currency-pill gem-pill" title="Permata Numerasi">💎 <span id="top-gems">0</span></div>
+      <button id="btn-toggle-bgm" class="btn-icon" title="Musik Latar ON/OFF">🎵 Musik: OFF</button>
+      <button id="btn-toggle-sfx" class="btn-icon" title="Efek Suara ON/OFF">🔊 Suara: ON</button>
+      <button id="btn-fullscreen" class="btn-icon" title="Layar Penuh untuk Proyektor">⛶ Proyektor</button>
+    </div>
+  </header>
+
+  <!-- 1. LAYAR PEMBUKA (SPLASH SCREEN) -->
+  <section id="screen-splash" class="screen active">
+    <div class="splash-content">
+      <div class="logo-badge">KURIKULUM MERDEKA — SMP/MTs KELAS 7, 8, 9</div>
+      <h1 class="main-logo">MATH LEGENDS<br><span>BATTLE ARENA</span></h1>
+      <p class="slogan">"Jawab Soal, Serang Lawan, Jadilah Legenda!"</p>
+
+      <div class="splash-heroes-showcase" id="splash-hero-preview">
+        <!-- Diisi otomatis oleh SVG Hero -->
+      </div>
+
+      <div class="splash-actions">
+        <button id="btn-start-game" class="btn-primary btn-glow btn-large">⚔️ MULAI BERMAIN</button>
+        <div class="splash-audio-hint">
+          <button id="btn-splash-audio" class="btn-secondary">🎵 Aktifkan Musik Fantasi & Mulai</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. HALAMAN BERANDA (DASHBOARD UTAMA) -->
+  <section id="screen-dashboard" class="screen">
+    <div class="dashboard-grid">
+      <!-- Panel Kiri: Profil & Hero Aktif -->
+      <div class="card hero-showcase-card">
+        <div class="player-header">
+          <div class="avatar-frame" id="dash-avatar-frame">
+            <div id="dash-hero-svg" class="hero-svg-container"></div>
+          </div>
+          <div class="player-info">
+            <div class="rank-badge" id="dash-rank">BRONZE</div>
+            <h2 id="dash-player-name">Ksatria Angka</h2>
+            <p id="dash-hero-title" class="hero-subtitle">PAIMAN — Knight of Numbers</p>
+          </div>
+        </div>
+
+        <div class="xp-container">
+          <div class="xp-label">
+            <span>Level <strong id="dash-level">1</strong></span>
+            <span>XP: <strong id="dash-xp">0</strong> / <span id="dash-xp-next">100</span></span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="dash-xp-bar" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="hero-stats-mini">
+          <div class="stat-pill">❤️ HP: <strong id="dash-stat-hp">120</strong></div>
+          <div class="stat-pill">⚔️ ATK: <strong id="dash-stat-atk">25</strong></div>
+          <div class="stat-pill">🛡️ DEF: <strong id="dash-stat-def">15</strong></div>
+        </div>
+
+        <div class="learning-summary">
+          <h3>📊 Ringkasan Belajar</h3>
+          <div class="summary-grid">
+            <div>Menang: <strong id="stat-wins">0</strong></div>
+            <div>Soal Dijawab: <strong id="stat-total-q">0</strong></div>
+            <div>Akurasi: <strong id="stat-accuracy">0%</strong></div>
+            <div>Combo Tertinggi: <strong id="stat-max-combo">0</strong></div>
+          </div>
+        </div>
+
+        <button id="btn-change-hero" class="btn-secondary btn-full">🦸 Ganti / Pilih Hero (8 Hero)</button>
+      </div>
+
+      <!-- Panel Kanan: Mode Permainan & Menu Utama -->
+      <div class="dashboard-main">
+        <div class="card cta-battle-card">
+          <div class="cta-text">
+            <h2>Siap Bertarung di Arena Numerasi?</h2>
+            <p>Pilih mode permainan atau langsung bertarung menghadapi Monster Matematika!</p>
+          </div>
+          <button id="btn-play-now" class="btn-primary btn-glow btn-large">⚡ MAIN SEKARANG</button>
+        </div>
+
+        <h3 class="section-heading">🎮 PILIH MODE PERMAINAN</h3>
+        <div class="modes-grid">
+          <button class="mode-card" data-mode="quick">
+            <span class="mode-icon">⚔️</span>
+            <h4>Quick Battle</h4>
+            <p>Pertandingan cepat 5 soal lawan AI.</p>
+          </button>
+          <button class="mode-card" data-mode="practice">
+            <span class="mode-icon">📖</span>
+            <h4>Menu Latihan</h4>
+            <p>Pilih kelas & bab tertentu (Bisa tanpa timer).</p>
+          </button>
+          <button class="mode-card" data-mode="ranked">
+            <span class="mode-icon">🏆</span>
+            <h4>Ranked Battle</h4>
+            <p>Naikkan Rank dari Bronze hingga Legend!</p>
+          </button>
+          <button class="mode-card" data-mode="boss">
+            <span class="mode-icon">🐉</span>
+            <h4>Boss Battle</h4>
+            <p>Lawan Naga Aljabar HP besar & soal HOTS.</p>
+          </button>
+          <button class="mode-card" data-mode="daily">
+            <span class="mode-icon">📅</span>
+            <h4>Tantangan Harian</h4>
+            <p>Bonus koin & permata berlipat setiap hari.</p>
+          </button>
+          <button class="mode-card" data-mode="twoplayer">
+            <span class="mode-icon">👥</span>
+            <h4>Mode 2 Pemain</h4>
+            <p>Duel bergantian 1 layar bersama teman!</p>
+          </button>
+          <button class="mode-card mode-classroom" data-mode="classroom">
+            <span class="mode-icon">👨‍🏫</span>
+            <h4>Mode Kelas & Guru (Proyektor)</h4>
+            <p>Tampilan besar untuk LCD kelas, kuis grup & pembahasan.</p>
+          </button>
+        </div>
+
+        <h3 class="section-heading">🛠️ MENU FITUR & PROGRES</h3>
+        <div class="nav-menus-grid">
+          <button class="nav-btn" data-target="screen-missions">🎯 Misi Harian <span id="badge-missions" class="badge">!</span></button>
+          <button class="nav-btn" data-target="screen-achievements">🏅 Prestasi</button>
+          <button class="nav-btn" data-target="screen-shop">🛒 Toko Hero & Atribut</button>
+          <button class="nav-btn" data-target="screen-leaderboard">📊 Papan Skor</button>
+          <button class="nav-btn" data-target="screen-profile">👤 Profil Pemain</button>
+          <button class="nav-btn" data-target="screen-settings">⚙️ Pengaturan</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. MODAL PERSIAPAN PERTANDINGAN (PILIH KELAS & MATERI) -->
+  <div id="modal-setup" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="setup-title">Persiapan Pertarungan</h2>
+        <button id="btn-close-setup" class="btn-close">✖</button>
+      </div>
+      <div class="modal-body">
+        <p id="setup-desc">Pilih tingkatan kelas dan topik matematika yang ingin diujikan.</p>
+
+        <div class="form-group">
+          <label for="select-grade">Pilih Kelas SMP/MTs:</label>
+          <select id="select-grade" class="form-control">
+            <option value="all">Semua Kelas (Campuran Kelas 7, 8, 9)</option>
+            <option value="7">Kelas 7 SMP</option>
+            <option value="8">Kelas 8 SMP</option>
+            <option value="9">Kelas 9 SMP</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="select-topic">Pilih Materi Matematika:</label>
+          <select id="select-topic" class="form-control">
+            <option value="all">Semua Materi</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="group-difficulty">
+          <label for="select-diff">Tingkat Kesulitan Awal:</label>
+          <select id="select-diff" class="form-control">
+            <option value="adaptive">Adaptif Otomatis (Menyesuaikan Kemampuanmu)</option>
+            <option value="mudah">Mudah (Konsep Dasar)</option>
+            <option value="sedang">Sedang (Penerapan & Aplikasi)</option>
+            <option value="sulit">Sulit (Penalaran & HOTS)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="group-timer-toggle">
+          <label class="checkbox-label">
+            <input type="checkbox" id="chk-use-timer" checked>
+            Gunakan Timer Menjawab (<span id="timer-sec-label">45</span> detik per soal)
+          </label>
+        </div>
+
+        <div id="twoplayer-names" class="form-group hidden">
+          <label>Nama Kedua Pemain (Mode 2 Pemain):</label>
+          <div class="two-col">
+            <input type="text" id="p1-name-input" class="form-control" placeholder="Nama Pemain 1" value="Pemain 1">
+            <input type="text" id="p2-name-input" class="form-control" placeholder="Nama Pemain 2" value="Pemain 2">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-Cancel-setup" class="btn-secondary">Batal</button>
+        <button id="btn-launch-battle" class="btn-primary btn-glow">🚀 MASUK KE ARENA!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. LAYAR PEMILIHAN HERO -->
+  <section id="screen-heroes" class="screen">
+    <div class="screen-header">
+      <h2>🦸 PILIH HERO LEGENDARISMU</h2>
+      <p>Gunakan Koin dari hasil belajar untuk membuka seluruh 8 Ksatria Matematika!</p>
+    </div>
+    <div id="heroes-list-grid" class="heroes-grid"></div>
+  </section>
+
+  <!-- 5. LAYAR BATTLE ARENA -->
+  <section id="screen-arena" class="screen">
+    <!-- Bar Informasi Pertandingan / Kontrol Guru -->
+    <div class="arena-top-hud">
+      <div class="hud-info-pill">
+        <span id="arena-mode-badge" class="badge-mode">QUICK BATTLE</span>
+        <span>Soal: <strong id="arena-q-index">1</strong> / <span id="arena-q-total">5</span></span>
+        <span id="arena-turn-indicator" class="turn-pill hidden">Giliran: Pemain 1</span>
+      </div>
+      <div class="timer-box" id="arena-timer-box">
+        ⏱️ <span id="arena-timer">45</span>d
+      </div>
+      <div class="hud-controls">
+        <button id="btn-pause-game" class="btn-small">⏸️ Jeda</button>
+        <button id="btn-quit-battle" class="btn-small btn-danger">🏳️ Keluar</button>
+      </div>
+    </div>
+
+    <!-- Panggung Pertarungan Visual -->
+    <div class="battle-stage" id="battle-stage">
+      <!-- Karakter Kiri (Pemain) -->
+      <div class="fighter-side player-side">
+        <div class="fighter-hud">
+          <div class="fighter-name-row">
+            <strong id="battle-p-name">PAIMAN</strong>
+            <span id="battle-p-lvl" class="lvl-tag">Lv.1</span>
+          </div>
+          <div class="hp-bar-outer">
+            <div id="battle-p-hp-bar" class="hp-bar-inner hp-player" style="width: 100%;"></div>
+            <span id="battle-p-hp-text" class="hp-text">120 / 120</span>
+          </div>
+          <div class="energy-Combo-row">
+            <span class="energy-pill">⚡ Energi Skill: <strong id="battle-energy">0</strong>/100</span>
+            <span id="battle-combo-badge" class="combo-badge hidden">🔥 COMBO x2</span>
+          </div>
+        </div>
+        <div class="fighter-sprite-wrap" id="player-sprite-wrap">
+          <div id="player-shield-fx" class="shield-fx hidden">🛡️</div>
+          <div id="battle-player-svg" class="fighter-svg"></div>
+          <div id="player-dmg-float" class="dmg-float hidden">-20</div>
+        </div>
+      </div>
+
+      <!-- Efek Tengah / Petir / Sihir -->
+      <div class="stage-center-fx">
+        <div id="fx-projectile" class="fx-projectile hidden">✨</div>
+        <div id="arena-vs-banner" class="vs-banner">VS</div>
+      </div>
+
+      <!-- Karakter Kanan (Monster / Lawan) -->
+      <div class="fighter-side enemy-side">
+        <div class="fighter-hud">
+          <div class="fighter-name-row">
+            <strong id="battle-e-name">Golem Pecahan</strong>
+            <span id="battle-e-lvl" class="lvl-tag">Boss</span>
+          </div>
+          <div class="hp-bar-outer">
+            <div id="battle-e-hp-bar" class="hp-bar-inner hp-enemy" style="width: 100%;"></div>
+            <span id="battle-e-hp-text" class="hp-text">150 / 150</span>
+          </div>
+          <div class="enemy-intent">
+            <span id="enemy-status-text">😈 Bersiap menyerang...</span>
+          </div>
+        </div>
+        <div class="fighter-sprite-wrap" id="enemy-sprite-wrap">
+          <div id="battle-enemy-svg" class="fighter-svg"></div>
+          <div id="enemy-dmg-float" class="dmg-float hidden">-35</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pemilihan Skill Serangan Sebelum/Saat Menjawab -->
+    <div class="skills-bar">
+      <span class="skills-label">Pilih Jurus Serangan:</span>
+      <button class="skill-btn active" id="skill-btn-1" data-skill="1">
+        ⚔️ <strong>Skill 1: Basic Attack</strong> (Gratis | DMG 1x)
+      </button>
+      <button class="skill-btn" id="skill-btn-2" data-skill="2">
+        🔮 <strong>Skill 2: Magic Strike</strong> (30 Energi | DMG 1.6x + Perisai)
+      </button>
+      <button class="skill-btn" id="skill-btn-3" data-skill="3">
+        🌩️ <strong>Skill 3: Ultimate Math</strong> (60 Energi | DMG 2.5x Critical!)
+      </button>
+      <button class="skill-btn hint-btn" id="btn-use-hint" title="Gunakan Petunjuk Guru">
+        💡 <strong>Petunjuk</strong> (<span id="hint-count">2</span>x)
+      </button>
+    </div>
+
+    <!-- Panel Soal Matematika & Pilihan Jawaban -->
+    <div class="question-panel card" id="question-panel">
+      <div class="question-meta">
+        <span id="q-badge-grade" class="q-tag">Kelas 7</span>
+        <span id="q-badge-topic" class="q-tag">Aljabar</span>
+        <span id="q-badge-diff" class="q-tag diff-mudah">Mudah</span>
+        <span id="q-adaptive-note" class="adaptive-note"></span>
+      </div>
+
+      <div id="question-text" class="question-text">
+        Memuat soal matematika...
+      </div>
+
+      <div id="hint-box" class="hint-box hidden"></div>
+
+      <div id="options-grid" class="options-grid">
+        <button class="option-btn" data-idx="0"><span class="opt-letter">A</span> <span class="opt-text">...</span></button>
+        <button class="option-btn" data-idx="1"><span class="opt-letter">B</span> <span class="opt-text">...</span></button>
+        <button class="option-btn" data-idx="2"><span class="opt-letter">C</span> <span class="opt-text">...</span></button>
+        <button class="option-btn" data-idx="3"><span class="opt-letter">D</span> <span class="opt-text">...</span></button>
+      </div>
+    </div>
+
+    <!-- Panel Umpan Balik & Pembahasan Langsung -->
+    <div id="feedback-panel" class="feedback-panel card hidden">
+      <div id="feedback-header" class="feedback-header">✅ JAWABAN BENAR!</div>
+      <div id="feedback-explanation" class="feedback-explanation"></div>
+      <button id="btn-next-question" class="btn-primary btn-glow">LANJUTKAN PERTARUNGAN ➡️</button>
+    </div>
+  </section>
+
+  <!-- 6. MODAL HASIL PERTANDINGAN -->
+  <div id="modal-result" class="modal hidden">
+    <div class="modal-content result-modal-card">
+      <div id="result-banner" class="result-banner win">🏆 VICTORY!</div>
+      <h2 id="result-title">Luar Biasa, Ksatria!</h2>
+      <p id="result-subtitle">Kamu berhasil menaklukkan lawan dengan kekuatan matematika.</p>
+
+      <div class="result-stats-grid">
+        <div class="res-box">
+          <span>Skor Akhir</span>
+          <strong id="res-score">0</strong>
+        </div>
+        <div class="res-box">
+          <span>Jawaban Benar</span>
+          <strong id="res-correct">0 / 5</strong>
+        </div>
+        <div class="res-box">
+          <span>XP Diperoleh</span>
+          <strong id="res-xp">+0 XP</strong>
+        </div>
+        <div class="res-box">
+          <span>Hadiah Koin & Permata</span>
+          <strong id="res-coins">+0 🪙</strong>
+        </div>
+      </div>
+
+      <div id="res-2p-summary" class="res-2p-box hidden"></div>
+
+      <div class="modal-footer">
+        <button id="btn-result-home" class="btn-secondary">🏠 Ke Beranda</button>
+        <button id="btn-result-rematch" class="btn-primary btn-glow">🔄 Main Lagi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. LAYAR MISI HARIAN -->
+  <section id="screen-missions" class="screen">
+    <div class="screen-header">
+      <h2>🎯 MISI HARIAN NUMERASI</h2>
+      <p>Misi diperbarui setiap hari secara otomatis. Selesaikan untuk klaim Koin & Permata!</p>
+    </div>
+    <div id="missions-list" class="list-container"></div>
+  </section>
+
+  <!-- 8. LAYAR PRESTASI (ACHIEVEMENTS) -->
+  <section id="screen-achievements" class="screen">
+    <div class="screen-header">
+      <h2>🏅 LENCANA PRESTASI LEGENDA</h2>
+      <p>Kumpulkan seluruh pencapaian selama kamu berlatih matematika!</p>
+    </div>
+    <div id="achievements-grid" class="achievements-grid"></div>
+  </section>
+
+  <!-- 9. LAYAR TOKO HERO & ATRIBUT KOSMETIK -->
+  <section id="screen-shop" class="screen">
+    <div class="screen-header">
+      <h2>🛒 TOKO KSATRIA & ATRIBUT SIHIR</h2>
+      <p>Seluruh item dibeli menggunakan Koin & Permata hasil belajar (100% Gratis Tanpa Uang Asli).</p>
+    </div>
+    <div id="shop-items-grid" class="shop-grid"></div>
+  </section>
+
+  <!-- 10. LAYAR PAPAN SKOR (LEADERBOARD) -->
+  <section id="screen-leaderboard" class="screen">
+    <div class="screen-header">
+      <h2>📊 PAPAN SKOR LOKAL</h2>
+      <p class="notice-box">ℹ️ <strong>Catatan Transparansi:</strong> Papan skor ini menyimpan rekor pemain dan riwayat sesi kelas pada perangkat/browser ini. Untuk papan skor lintas perangkat satu sekolah, sistem telah menyiapkan fungsi ekspor/integrasi ke Google Apps Script / Backend Sekolah.</p>
+    </div>
+    <div class="card">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Peringkat</th>
+            <th>Nama Pemain</th>
+            <th>Rank</th>
+            <th>Level</th>
+            <th>Total XP</th>
+            <th>Menang</th>
+            <th>Akurasi</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 11. LAYAR PROFIL PEMAIN -->
+  <section id="screen-profile" class="screen">
+    <div class="screen-header">
+      <h2>👤 PROFIL & STATISTIK BELAJAR</h2>
+    </div>
+    <div class="card profile-edit-card">
+      <div class="form-group">
+        <label for="input-player-name">Ganti Nama Panggilan Ksatria:</label>
+        <input type="text" id="input-player-name" class="form-control" maxlength="24">
+      </div>
+      <div class="form-group">
+        <label for="select-frame-style">Pilih Bingkai Profil Kosmetik:</label>
+        <select id="select-frame-style" class="form-control"></select>
+      </div>
+      <button id="btn-save-profile" class="btn-primary">💾 Simpan Profil</button>
+
+      <hr class="divider">
+      <h3>📜 Riwayat 5 Pertandingan Terakhir</h3>
+      <ul id="match-history-list" class="history-list"></ul>
+    </div>
+  </section>
+
+  <!-- 12. LAYAR PENGATURAN -->
+  <section id="screen-settings" class="screen">
+    <div class="screen-header">
+      <h2>⚙️ PENGATURAN GAME & MODE GURU</h2>
+    </div>
+    <div class="card settings-card">
+      <div class="setting-row">
+        <span>Ukuran Teks Proyektor Besar (Mode Kelas):</span>
+        <button id="btn-toggle-projector-font" class="btn-secondary">Aktifkan Font Besar</button>
+      </div>
+      <div class="setting-row">
+        <span>Durasi Default Timer Soal:</span>
+        <select id="setting-timer-duration" class="form-control" style="max-width:200px;">
+          <option value="30">30 Detik</option>
+          <option value="45" selected>45 Detik</option>
+          <option value="60">60 Detik</option>
+          <option value="90">90 Detik (Diskusi Kelas)</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <span>Reset Seluruh Progres Tersimpan (LocalStorage):</span>
+        <button id="btn-reset-data" class="btn-danger">🗑️ Reset Data Game</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTIFIKASI TOAST -->
+  <div id="toast-msg" class="toast hidden">Notifikasi</div>
+
+  <!-- SCRIPT UTAMA -->
+  <script src="data-soal.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
